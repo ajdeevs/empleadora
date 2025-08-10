@@ -24,6 +24,14 @@ import PostProject from "./pages/PostProject";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import Dashboard from "./pages/Dashboard";
 
+// New escrow-related pages
+import CreateProject from "./pages/CreateProject";
+import ProjectManagement from "./pages/ProjectManagement";
+import FundingDashboard from "./pages/FundingDashboard";
+import AdminPanel from "./pages/AdminPanel";
+import MilestoneDelivery from "./pages/MilestoneDelivery";
+import TokenFunding from "./pages/TokenFunding";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -51,6 +59,15 @@ const App = () => (
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/how-it-works" element={<HowItWorksPage />} />
                     <Route path="/saved-profiles" element={<SavedProfiles />} />
+                    
+                    {/* Escrow System Routes */}
+                    <Route path="/create-project" element={<CreateProject />} />
+                    <Route path="/project-management" element={<ProjectManagement />} />
+                    <Route path="/funding" element={<FundingDashboard />} />
+                    <Route path="/admin" element={<AdminPanel />} />
+                    <Route path="/deliverables" element={<MilestoneDelivery />} />
+                    <Route path="/token-funding" element={<TokenFunding />} />
+                    
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>

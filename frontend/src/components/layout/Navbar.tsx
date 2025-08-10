@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ModeToggle } from '@/components/ui/ModeToggle';
 import { Button } from '@/components/ui/button';
-import { Search, Menu, X, Bookmark, User, LogOut, Plus } from 'lucide-react';
+import { Search, Menu, X, Bookmark, User, LogOut, Plus, Shield, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSavedProfiles } from '@/context/SavedProfilesContext';
 import { toast } from '@/hooks/use-toast';
@@ -76,13 +76,13 @@ export function Navbar() {
   return (
     <header 
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled ? "py-2 glass-dark shadow-sm" : "py-4 bg-transparent"
+        "fixed top-0 w-full z-50 transition-all duration-300 border-b",
+        isScrolled ? "py-2 bg-white/95 backdrop-blur-md shadow-sm border-gray-200" : "py-4 bg-white/90 backdrop-blur-md border-gray-100"
       )}
     >
       <div className="container px-4 mx-auto flex items-center justify-between">
-        <Link to="/" className="text-foreground font-semibold text-xl tracking-tight">
-          Empleadora<span className="text-primary">.</span>
+        <Link to="/" className="text-gray-900 font-bold text-xl tracking-tight">
+          Empleadora<span className="text-gray-600">.</span>
         </Link>
         
         <div className="hidden md:flex items-center space-x-8">
@@ -94,8 +94,8 @@ export function Navbar() {
                 className={cn(
                   "text-sm font-medium transition-colors relative",
                   location.pathname === link.path 
-                    ? "text-primary after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:-bottom-1 after:left-0" 
-                    : "text-muted-foreground hover:text-foreground hover:after:content-[''] hover:after:absolute hover:after:w-full hover:after:h-0.5 hover:after:bg-primary/30 hover:after:scale-x-100 hover:after:-bottom-1 hover:after:left-0 hover:after:transition-transform hover:after:duration-300 hover:after:ease-in-out"
+                    ? "text-gray-900 after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-gray-900 after:-bottom-1 after:left-0" 
+                    : "text-gray-600 hover:text-gray-900 hover:after:content-[''] hover:after:absolute hover:after:w-full hover:after:h-0.5 hover:after:bg-gray-400 hover:after:scale-x-100 hover:after:-bottom-1 hover:after:left-0 hover:after:transition-transform hover:after:duration-300 hover:after:ease-in-out"
                 )}
               >
                 {link.name}
@@ -112,7 +112,7 @@ export function Navbar() {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="border rounded-l-md px-3 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="border border-gray-300 rounded-l-md px-3 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-gray-400"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
@@ -121,7 +121,7 @@ export function Navbar() {
                   type="submit" 
                   variant="default" 
                   size="sm" 
-                  className="rounded-l-none rounded-r-md"
+                  className="rounded-l-none rounded-r-md bg-gray-900 hover:bg-gray-800 text-white"
                 >
                   <Search size={16} />
                 </Button>
@@ -130,7 +130,7 @@ export function Navbar() {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setIsSearchOpen(false)}
-                  className="ml-1"
+                  className="ml-1 text-gray-600 hover:text-gray-900"
                 >
                   <X size={16} />
                 </Button>
@@ -187,6 +187,42 @@ export function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link to="/saved-profiles" className="w-full">
                       Saved Profiles
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>Escrow System</DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link to="/create-project" className="w-full">
+                      <Plus size={16} className="mr-2" />
+                      Create Project
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/project-management" className="w-full">
+                      Project Management
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/funding" className="w-full">
+                      <Coins size={16} className="mr-2" />
+                      Funding Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/token-funding" className="w-full">
+                      <Coins size={16} className="mr-2" />
+                      Token Funding
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/deliverables" className="w-full">
+                      Submit Deliverables
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="w-full">
+                      <Shield size={16} className="mr-2" />
+                      Admin Panel
                     </Link>
                   </DropdownMenuItem>
                   {user.type === 'client' && (
@@ -307,6 +343,85 @@ export function Navbar() {
                   <Plus size={16} className="mr-2" />
                   Post a Project
                 </Link>
+              )}
+              
+              {/* Escrow System Mobile Menu */}
+              {user?.isLoggedIn && (
+                <>
+                  <div className="pt-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Escrow System
+                  </div>
+                  <Link
+                    to="/create-project"
+                    className={cn(
+                      "text-sm font-medium p-2 rounded transition-colors flex items-center",
+                      location.pathname === "/create-project" 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Plus size={16} className="mr-2" />
+                    Create Project
+                  </Link>
+                  <Link
+                    to="/project-management"
+                    className={cn(
+                      "text-sm font-medium p-2 rounded transition-colors flex items-center",
+                      location.pathname === "/project-management" 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    Project Management
+                  </Link>
+                  <Link
+                    to="/funding"
+                    className={cn(
+                      "text-sm font-medium p-2 rounded transition-colors flex items-center",
+                      location.pathname === "/funding" 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Coins size={16} className="mr-2" />
+                    Funding Dashboard
+                  </Link>
+                  <Link
+                    to="/token-funding"
+                    className={cn(
+                      "text-sm font-medium p-2 rounded transition-colors flex items-center",
+                      location.pathname === "/token-funding" 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Coins size={16} className="mr-2" />
+                    Token Funding
+                  </Link>
+                  <Link
+                    to="/deliverables"
+                    className={cn(
+                      "text-sm font-medium p-2 rounded transition-colors flex items-center",
+                      location.pathname === "/deliverables" 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    Submit Deliverables
+                  </Link>
+                  <Link
+                    to="/admin"
+                    className={cn(
+                      "text-sm font-medium p-2 rounded transition-colors flex items-center",
+                      location.pathname === "/admin" 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    <Shield size={16} className="mr-2" />
+                    Admin Panel
+                  </Link>
+                </>
               )}
             </nav>
             
