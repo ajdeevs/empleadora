@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClientFundingModal } from '@/components/shared/ClientFundingModal';
 import { 
   DollarSign, 
   CheckCircle, 
@@ -410,63 +411,113 @@ const FundingManagement = () => {
 
           <TabsContent value="fund" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Fund Milestone Form */}
+              {/* Client-Side Payment with Wallet */}
               <Card className="card-elevated">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <DollarSign size={20} />
-                    Fund Milestone
+                    Send Payments with MetaMask
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="fund-project-id">Project ID</Label>
-                    <Input
-                      id="fund-project-id"
-                      value={fundForm.projectId}
-                      onChange={(e) => setFundForm({...fundForm, projectId: e.target.value})}
-                      placeholder="Enter project ID"
-                    />
+                <CardContent>
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground">
+                      Connect your MetaMask wallet to send payments directly to freelancers.
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {projects.map((project) => (
+                        <Card key={project.projectId} className="p-4">
+                          <div className="space-y-3">
+                            <div>
+                              <h4 className="font-medium">Project #{project.onchainPid}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {project.fundedCount}/{project.totalMilestones} milestones funded
+                              </p>
+                            </div>
+                            
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium">
+                                {project.milestones.filter(m => !m.funded).length} payments available
+                              </span>
+                              <ClientFundingModal
+                                project={{
+                                  id: project.projectId,
+                                  onchain_pid: project.onchainPid,
+                                  title: `Project ${project.onchainPid}`,
+                                  description: `Project with ${project.totalMilestones} milestones`,
+                                  budget: `${project.milestones.reduce((sum, m) => sum + parseFloat(m.amount), 0)} AVAX`,
+                                  status: project.fundedCount === project.totalMilestones ? 'COMPLETED' : 'IN_PROGRESS',
+                                  milestones: project.milestones.map(m => ({
+                                    id: m.milestoneId,
+                                    mid: m.milestoneId,
+                                    amount_wei: m.amountWei,
+                                    funded: m.funded,
+                                    released: m.released
+                                  })),
+                                  client: {
+                                    id: 0,
+                                    email: '',
+                                    wallet_address: project.clientWalletAddress
+                                  }
+                                }}
+                                onFundingComplete={() => {
+                                  const fetchProjects = async () => {
+                                    try {
+                                      setLoading(true);
+                                      const response = await fetch('http://localhost:3001/projects');
+                                      if (!response.ok) {
+                                        throw new Error('Failed to fetch projects');
+                                      }
+                                      const projectsData = await response.json();
+                                      
+                                      const transformedProjects = projectsData.map((project: any) => ({
+                                        projectId: project.id,
+                                        onchainPid: project.onchain_pid,
+                                        clientWalletAddress: project.client.wallet_address,
+                                        totalMilestones: project.milestones.length,
+                                        fundedCount: project.milestones.filter((m: any) => m.funded).length,
+                                        releasedCount: project.milestones.filter((m: any) => m.released).length,
+                                        milestones: project.milestones.map((milestone: any) => ({
+                                          milestoneId: milestone.id,
+                                          title: `Milestone ${milestone.mid + 1}`,
+                                          description: `Project milestone ${milestone.mid + 1}`,
+                                          amount: (parseInt(milestone.amount_wei) / 1e18).toString(),
+                                          amountWei: milestone.amount_wei,
+                                          funded: milestone.funded,
+                                          released: milestone.released,
+                                          fundedTxHash: milestone.funded_tx_hash || undefined,
+                                          releasedTxHash: milestone.released_tx_hash || undefined
+                                        }))
+                                      }));
+                                      
+                                      setProjects(transformedProjects);
+                                    } catch (error) {
+                                      console.error('Error fetching projects:', error);
+                                      toast({
+                                        title: "Error",
+                                        description: "Failed to refresh projects",
+                                        variant: "destructive",
+                                      });
+                                    } finally {
+                                      setLoading(false);
+                                    }
+                                  };
+                                  fetchProjects();
+                                }}
+                                                                  trigger={
+                                    <Button variant="outline" size="sm">
+                                      <DollarSign className="mr-2 h-4 w-4" />
+                                      Send Payment
+                                    </Button>
+                                  }
+                              />
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
-                  
-                  <div>
-                    <Label htmlFor="fund-milestone-id">Milestone ID</Label>
-                    <Input
-                      id="fund-milestone-id"
-                      value={fundForm.milestoneId}
-                      onChange={(e) => setFundForm({...fundForm, milestoneId: e.target.value})}
-                      placeholder="Enter milestone ID"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="fund-wallet">Client Wallet Address</Label>
-                    <Input
-                      id="fund-wallet"
-                      value={fundForm.clientWalletAddress}
-                      onChange={(e) => setFundForm({...fundForm, clientWalletAddress: e.target.value})}
-                      placeholder="0x..."
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="fund-amount">Amount (AVAX)</Label>
-                    <Input
-                      id="fund-amount"
-                      type="number"
-                      value={fundForm.amount}
-                      onChange={(e) => setFundForm({...fundForm, amount: e.target.value})}
-                      placeholder="0.0"
-                    />
-                  </div>
-                  
-                  <Button 
-                    onClick={fundMilestone} 
-                    disabled={loading}
-                    className="w-full"
-                  >
-                    {loading ? 'Funding Milestone...' : 'Fund Milestone'}
-                  </Button>
                 </CardContent>
               </Card>
 

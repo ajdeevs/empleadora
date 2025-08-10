@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ModeToggle } from '@/components/ui/ModeToggle';
 import { useUserMode } from '@/context/UserModeContext';
 import { useAuth } from '@/context/AuthContext';
+import { WalletConnectButton } from '@/components/shared/WalletAdapter';
 import { Menu, User, LogOut, Settings, Briefcase, Users, Award, Shield, TrendingUp } from 'lucide-react';
 
 export function Navbar() {
@@ -79,6 +80,9 @@ export function Navbar() {
 
         {/* Right Side */}
         <div className="flex items-center space-x-4">
+          {/* Wallet Connect Button */}
+          <WalletConnectButton />
+
           {/* User Mode Toggle */}
           <Button
             variant="outline"

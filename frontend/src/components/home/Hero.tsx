@@ -1,14 +1,30 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Shield, MapPin } from 'lucide-react';
+import { ArrowRight, CheckCircle, Shield, MapPin, Sparkles, TrendingUp, Users, Award } from 'lucide-react';
 import { useUserMode } from '@/context/UserModeContext';
 import { cn } from '@/lib/utils';
 
 export function Hero() {
   const { mode } = useUserMode();
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentFeature, setCurrentFeature] = useState(0);
+  const [typingText, setTypingText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  
+  const features = [
+    'Secure Escrow Payments',
+    'KYC Verified Professionals',
+    'AI-Powered Matching',
+    '24/7 Local Support'
+  ];
+  
+  const stats = [
+    { label: 'Active Projects', value: '2,500+', icon: TrendingUp },
+    { label: 'Verified Users', value: '25K+', icon: Users },
+    { label: 'Success Rate', value: '98%', icon: Award }
+  ];
   
   const heroPoints = {
     client: [
@@ -22,19 +38,83 @@ export function Hero() {
       'Skill-based job recommendations'
     ]
   };
+
+  // Rotate through features
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeature((prev) => (prev + 1) % features.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Typing effect for KYC Verified Professionals
+  useEffect(() => {
+    if (features[currentFeature] === 'KYC Verified Professionals') {
+      // Add a small delay before starting to type
+      const delayTimer = setTimeout(() => {
+        setIsTyping(true);
+        setTypingText('');
+        let index = 0;
+        const text = features[currentFeature];
+        
+        const typingInterval = setInterval(() => {
+          if (index < text.length) {
+            setTypingText(text.slice(0, index + 1));
+            index++;
+          } else {
+            setIsTyping(false);
+            clearInterval(typingInterval);
+          }
+        }, 80); // Slightly faster typing speed
+
+        return () => clearInterval(typingInterval);
+      }, 500); // 500ms delay before starting to type
+
+      return () => clearTimeout(delayTimer);
+    } else {
+      setIsTyping(false);
+      setTypingText(features[currentFeature]);
+    }
+  }, [currentFeature]);
   
   return (
     <section className="relative pt-32 pb-20 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary to-background -z-10"></div>
-      <div className="absolute right-0 top-1/4 w-1/2 aspect-square rounded-full bg-primary/5 blur-3xl -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary -z-10"></div>
+      <div className="absolute right-0 top-1/4 w-1/2 aspect-square rounded-full bg-primary/5 blur-3xl -z-10 animate-pulse"></div>
+      <div className="absolute left-0 bottom-1/4 w-1/3 aspect-square rounded-full bg-purple-500/5 blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }}></div>
       
       <div className="container px-4 mx-auto">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-fade-in">
+          {/* Animated Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full mb-6 animate-slide-in-down">
+            <Sparkles className="w-4 h-4 text-primary animate-bounce" />
+            <span className="text-sm font-medium text-primary">India's #1 Freelancing Platform</span>
+          </div>
+          
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-balance">
-            {mode === 'client' ? 
-              'Hire skilled freelancers from across India' : 
-              'Discover your next gig opportunity in India'}
+            <span className="text-foreground">
+              {mode === 'client' ? 
+                'Hire skilled freelancers from across India' : 
+                'Discover your next gig opportunity in India'}
+            </span>
           </h1>
+          
+          {/* Dynamic Feature Display with Typing Effect */}
+          <div className="h-8 mb-6 flex items-center justify-center">
+            <div className="text-lg md:text-xl text-primary font-medium">
+              {isTyping ? (
+                <span className="animate-fade-in">
+                  {typingText}
+                  <span className="typing-cursor">|</span>
+                </span>
+              ) : (
+                <span className="animate-fade-in">
+                  {features[currentFeature]}
+                </span>
+              )}
+            </div>
+          </div>
+          
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             {mode === 'client' ? 
               'Connect with talented professionals in design, development, writing, photography and more. Secure payments through escrow, guaranteed quality.' : 
@@ -67,11 +147,25 @@ export function Hero() {
             </Button>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+          {/* Enhanced Feature Points */}
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 mb-8">
             {heroPoints[mode].map((point, index) => (
-              <div key={index} className="flex items-center text-sm text-muted-foreground">
-                <CheckCircle size={16} className="text-primary mr-2" />
+              <div key={index} className="flex items-center text-sm text-muted-foreground animate-slide-in-up" style={{ animationDelay: `${index * 0.2}s` }}>
+                <CheckCircle size={16} className="text-primary mr-2 animate-bounce-x" />
                 {point}
+              </div>
+            ))}
+          </div>
+          
+          {/* Stats Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+            {stats.map((stat, index) => (
+              <div key={index} className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card/50 border border-border/50 hover:scale-105 transition-transform">
+                <stat.icon className="w-6 h-6 text-primary" />
+                <div className="text-center">
+                  <div className="text-lg font-bold text-foreground">{stat.value}</div>
+                  <div className="text-xs text-muted-foreground">{stat.label}</div>
+                </div>
               </div>
             ))}
           </div>
@@ -84,15 +178,17 @@ export function Hero() {
             <div className="space-y-8">
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full">
-                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                  <Sparkles className="w-4 h-4 text-primary animate-bounce" />
                   <span className="text-sm font-medium text-primary">India's #1 Freelancing Platform</span>
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                  <span className="text-foreground">Connect with</span>
+                  <span className="text-foreground">
+                    {mode === 'client' ? 'Connect with' : 'Join'}
+                  </span>
                   <br />
                   <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
-                    Top Indian Talent
+                    {mode === 'client' ? 'Top Indian Talent' : 'India\'s Best Platform'}
                   </span>
                 </h1>
                 
@@ -118,21 +214,21 @@ export function Hero() {
                 </Button>
               </div>
               
-              {/* Trust Indicators */}
+              {/* Enhanced Trust Indicators */}
               <div className="flex items-center gap-6 pt-4">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 hover:scale-105 transition-transform">
                   <div className="flex -space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center text-white text-xs font-bold">A</div>
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold">B</div>
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white text-xs font-bold">C</div>
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center text-white text-xs font-bold animate-bounce">A</div>
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold animate-bounce" style={{ animationDelay: '0.1s' }}>B</div>
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white text-xs font-bold animate-bounce" style={{ animationDelay: '0.2s' }}>C</div>
                   </div>
                   <span className="text-sm text-muted-foreground">25K+ verified users</span>
                 </div>
                 <div className="w-px h-6 bg-border"></div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 hover:scale-105 transition-transform">
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <div key={i} className="w-4 h-4 bg-amber-500 rounded-sm"></div>
+                      <div key={i} className="w-4 h-4 bg-amber-500 rounded-sm animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
                     ))}
                   </div>
                   <span className="text-sm text-muted-foreground">4.9/5 rating</span>
@@ -161,79 +257,81 @@ export function Hero() {
                     </div>
                   </div>
                   
-                  {/* Feature Grid */}
+                  {/* Enhanced Feature Grid */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="card-elevated rounded-lg p-4 text-center">
+                    <div className="card-elevated rounded-lg p-4 text-center hover:scale-105 transition-transform">
                       <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-                        <span className="text-xl">💼</span>
+                        <span className="text-xl animate-bounce">💼</span>
                       </div>
                       <div className="text-sm font-medium">Secure Payments</div>
                     </div>
-                    <div className="card-elevated rounded-lg p-4 text-center">
+                    <div className="card-elevated rounded-lg p-4 text-center hover:scale-105 transition-transform">
                       <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-                        <span className="text-xl">🛡️</span>
+                        <span className="text-xl animate-bounce" style={{ animationDelay: '0.1s' }}>🛡️</span>
                       </div>
                       <div className="text-sm font-medium">KYC Verified</div>
                     </div>
-                    <div className="card-elevated rounded-lg p-4 text-center">
+                    <div className="card-elevated rounded-lg p-4 text-center hover:scale-105 transition-transform">
                       <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-                        <span className="text-xl">🤖</span>
+                        <span className="text-xl animate-bounce" style={{ animationDelay: '0.2s' }}>🤖</span>
                       </div>
                       <div className="text-sm font-medium">AI Matching</div>
                     </div>
-                    <div className="card-elevated rounded-lg p-4 text-center">
+                    <div className="card-elevated rounded-lg p-4 text-center hover:scale-105 transition-transform">
                       <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-                        <span className="text-xl">🇮🇳</span>
+                        <span className="text-xl animate-bounce" style={{ animationDelay: '0.3s' }}>🇮🇳</span>
                       </div>
                       <div className="text-sm font-medium">Local Support</div>
                     </div>
                   </div>
                   
-                  {/* Stats */}
+                  {/* Enhanced Stats */}
                   <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-primary">₹50M+</div>
+                    <div className="text-center hover:scale-105 transition-transform">
+                      <div className="text-lg font-bold text-primary animate-pulse">₹50M+</div>
                       <div className="text-xs text-muted-foreground">Paid Out</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-primary">98%</div>
+                    <div className="text-center hover:scale-105 transition-transform">
+                      <div className="text-lg font-bold text-primary animate-pulse" style={{ animationDelay: '0.2s' }}>98%</div>
                       <div className="text-xs text-muted-foreground">Success Rate</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-primary">24/7</div>
+                    <div className="text-center hover:scale-105 transition-transform">
+                      <div className="text-lg font-bold text-primary animate-pulse" style={{ animationDelay: '0.4s' }}>24/7</div>
                       <div className="text-xs text-muted-foreground">Support</div>
                     </div>
                   </div>
                 </div>
               </div>
               
-              {/* Floating Elements */}
+              {/* Enhanced Floating Elements */}
               <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary/20 rounded-full animate-pulse"></div>
               <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-purple-500/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute top-1/2 -right-2 w-4 h-4 bg-blue-500/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+              <div className="absolute -top-2 left-1/2 w-3 h-3 bg-green-500/20 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
             </div>
           </div>
           
-          {/* Bottom Trust Bar */}
-          <div className="mt-12 card-elevated rounded-xl p-6">
+          {/* Enhanced Bottom Trust Bar */}
+          <div className="mt-12 card-elevated rounded-xl p-6 hover:scale-102 transition-transform">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-2 hover:scale-105 transition-transform">
+                  <Shield className="w-5 h-5 text-primary animate-bounce" />
                   <span className="text-sm font-medium">Escrow Protected</span>
                 </div>
                 <div className="w-px h-4 bg-border"></div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
+                <div className="flex items-center gap-2 hover:scale-105 transition-transform">
+                  <CheckCircle className="w-5 h-5 text-green-500 animate-bounce" style={{ animationDelay: '0.1s' }} />
                   <span className="text-sm font-medium">KYC Verified</span>
                 </div>
                 <div className="w-px h-4 bg-border"></div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-blue-500" />
+                <div className="flex items-center gap-2 hover:scale-105 transition-transform">
+                  <MapPin className="w-5 h-5 text-blue-500 animate-bounce" style={{ animationDelay: '0.2s' }} />
                   <span className="text-sm font-medium">India Focused</span>
                 </div>
               </div>
               <div className="text-sm text-muted-foreground">
-                Trusted by <span className="text-primary font-medium">25,000+</span> professionals
+                Trusted by <span className="text-primary font-medium animate-pulse">25,000+</span> professionals
               </div>
             </div>
           </div>

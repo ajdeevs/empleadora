@@ -182,4 +182,52 @@ router.post("/:id/deliver", async (req, res) => {
   }
 });
 
+// PUT mark milestone as funded (for client-side funding)
+router.put("/:id/mark-funded", async (req, res) => {
+  try {
+    const milestoneId = parseInt(req.params.id);
+    const { funded, transactionHash } = req.body;
+
+    const milestone = await prisma.milestone.update({
+      where: { id: milestoneId },
+      data: { 
+        funded: funded || true,
+        // You could also store the transaction hash if needed
+      },
+      include: {
+        project: {
+          include: {
+            client: {
+              select: {
+                id: true,
+                email: true,
+                wallet_address: true,
+                role: true
+              }
+            },
+            freelancer: {
+              select: {
+                id: true,
+                email: true,
+                wallet_address: true,
+                role: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Convert BigInts to strings for safe JSON
+    const safeMilestone = JSON.parse(JSON.stringify(milestone, (_, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    ));
+
+    res.json(safeMilestone);
+  } catch (err) {
+    console.error("Mark milestone funded error:", err);
+    res.status(500).json({ error: "Could not update milestone funding status" });
+  }
+});
+
 module.exports = router;
