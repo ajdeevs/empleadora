@@ -70,6 +70,20 @@ router.get("/status", async (req, res) => {
   }
 });
 
+// GET contract information for client-side funding
+router.get("/contract-info", async (req, res) => {
+  try {
+    res.json({
+      contractAddress: process.env.CONTRACT_ADDRESS,
+      rpcUrl: process.env.RPC_URL,
+      network: "Avalanche Fuji Testnet"
+    });
+  } catch (err) {
+    console.error("Get contract info error:", err);
+    res.status(500).json({ error: "Could not fetch contract information" });
+  }
+});
+
 // GET all disputed projects
 router.get("/disputes", async (req, res) => {
   try {
