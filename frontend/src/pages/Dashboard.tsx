@@ -7,6 +7,7 @@ import { AIJobMatcher } from '@/components/shared/AIJobMatcher';
 import { EscrowPaymentCard } from '@/components/shared/EscrowPaymentCard';
 import { ProjectMessaging } from '@/components/shared/ProjectMessaging';
 import { PortfolioCard } from '@/components/shared/PortfolioCard';
+import WalletConnection from '@/components/shared/WalletConnection';
 import { 
   TrendingUp, 
   DollarSign, 
@@ -20,7 +21,10 @@ import {
   Target,
   Zap,
   Bell,
-  CheckCircle
+  CheckCircle,
+  Coins,
+  Plus,
+  Eye
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -157,7 +161,7 @@ const Dashboard = ({ userType = 'freelancer' }: DashboardProps) => {
   };
 
   return (
-    <div className="pt-20 pb-8">
+    <div className="pt-24 pb-8">
       <div className="container px-4 mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -297,10 +301,11 @@ const Dashboard = ({ userType = 'freelancer' }: DashboardProps) => {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="ai-matches">AI Matches</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
+            <TabsTrigger value="escrow">Escrow</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
           </TabsList>
@@ -440,6 +445,148 @@ const Dashboard = ({ userType = 'freelancer' }: DashboardProps) => {
                 { id: '3', title: 'Final Delivery', amount: 25000, status: 'pending', dueDate: '2025-01-25' }
               ]}
             />
+          </TabsContent>
+
+          <TabsContent value="escrow" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Wallet Connection */}
+              <div className="lg:col-span-1">
+                <WalletConnection 
+                  onWalletConnected={(address) => console.log('Wallet connected:', address)}
+                  showBalance={true}
+                />
+              </div>
+              
+              {/* Quick Actions */}
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Shield size={20} />
+                      Escrow System Actions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Button 
+                        variant="outline" 
+                        className="h-16 flex flex-col gap-1"
+                        onClick={() => window.location.href = '/create-project'}
+                      >
+                        <Plus size={20} />
+                        <span className="text-sm">Create Project</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-16 flex flex-col gap-1"
+                        onClick={() => window.location.href = '/project-management'}
+                      >
+                        <Eye size={20} />
+                        <span className="text-sm">Manage Projects</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-16 flex flex-col gap-1"
+                        onClick={() => window.location.href = '/funding'}
+                      >
+                        <DollarSign size={20} />
+                        <span className="text-sm">Fund Milestones</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-16 flex flex-col gap-1"
+                        onClick={() => window.location.href = '/token-funding'}
+                      >
+                        <Coins size={20} />
+                        <span className="text-sm">Token Funding</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-16 flex flex-col gap-1"
+                        onClick={() => window.location.href = '/deliverables'}
+                      >
+                        <CheckCircle size={20} />
+                        <span className="text-sm">Submit Work</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-16 flex flex-col gap-1"
+                        onClick={() => window.location.href = '/admin'}
+                      >
+                        <Shield size={20} />
+                        <span className="text-sm">Admin Panel</span>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+            
+            {/* Recent Escrow Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock size={20} />
+                  Recent Escrow Activity
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <CheckCircle size={16} className="text-green-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Milestone funded</p>
+                        <p className="text-sm text-muted-foreground">Project #2 - Design Phase</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">0.1 AVAX</p>
+                      <p className="text-xs text-muted-foreground">2 hours ago</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Plus size={16} className="text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">New project created</p>
+                        <p className="text-sm text-muted-foreground">Multi-token project with 3 milestones</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">0.8 AVAX</p>
+                      <p className="text-xs text-muted-foreground">1 day ago</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <Clock size={16} className="text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Milestone approved</p>
+                        <p className="text-sm text-muted-foreground">Project #1 - Development Phase</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">0.2 AVAX</p>
+                      <p className="text-xs text-muted-foreground">3 days ago</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="messages" className="space-y-6">
