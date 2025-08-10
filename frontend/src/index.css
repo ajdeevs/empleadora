@@ -5,45 +5,44 @@
 
 @layer base {
   :root {
-    /* Clean White Theme */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 217.2 32.6% 17.5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 84% 4.9%;
+    --primary: 262.1 83.3% 57.8%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 98%;
-    --secondary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 98%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 210 40% 98%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 262.1 83.3% 57.8%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 222.2 84% 4.9%;
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 262.1 83.3% 57.8%;
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 98%;
-    --sidebar-accent-foreground: 222.2 84% 4.9%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 222.2 84% 4.9%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 262.1 83.3% 57.8%;
   }
 }
 
@@ -64,11 +63,11 @@
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-xl bg-white/80 border border-gray-200 shadow-sm;
+    @apply backdrop-blur-xl bg-card/80 border border-border shadow-lg;
   }
   
   .glass-dark {
-    @apply backdrop-blur-xl bg-white/95 border border-gray-200 shadow-md;
+    @apply backdrop-blur-xl bg-card/90 border border-border shadow-lg;
   }
   
   .text-balance {
@@ -76,23 +75,23 @@
   }
   
   .subtle-shadow {
-    box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
   }
   
   .glow {
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
   }
   
   .glow-primary {
-    box-shadow: 0 0 30px rgba(15, 23, 42, 0.1);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
   }
   
   .card-elevated {
-    @apply bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300;
   }
   
   .card-glow {
-    @apply bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300;
+    @apply bg-card border border-primary/20 shadow-lg hover:shadow-primary/20 transition-all duration-300;
   }
   
   /* Custom Animations */
@@ -195,18 +194,5 @@
   
   .animate-scroll-text {
     animation: scroll-text 20s linear infinite;
-  }
-  
-  /* Page layout utilities to avoid navbar overlap */
-  .page-container {
-    @apply pt-24 pb-8;
-  }
-  
-  .page-container-large {
-    @apply pt-32 pb-20;
-  }
-  
-  .page-header {
-    @apply mb-8;
   }
 }

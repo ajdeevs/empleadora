@@ -37,7 +37,7 @@ const additionalFeatures = [
 
 const HowItWorksPage = () => {
   return (
-    <div className="pt-24">
+    <div className="pt-20">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 to-secondary">
         <div className="container px-4 mx-auto text-center">

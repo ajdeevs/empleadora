@@ -82,13 +82,13 @@ export function ProfileCard({
   return (
     <div 
       className={cn(
-        "bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all duration-300",
+        "card-elevated rounded-xl border overflow-hidden transition-all duration-300",
         "hover:shadow-lg hover:translate-y-[-4px]",
-        featured ? "border-gray-300 ring-1 ring-gray-200" : "border-gray-200"
+        featured ? "border-primary/30 ring-1 ring-primary/20" : "border-border"
       )}
     >
       {featured && (
-        <div className="bg-gray-100 text-gray-700 text-xs font-medium text-center py-1.5">
+        <div className="bg-primary/10 text-primary text-xs font-medium text-center py-1.5">
           Featured Freelancer
         </div>
       )}
@@ -106,17 +106,17 @@ export function ProfileCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <Link to={`/profile/${id}`} className="hover:text-gray-900 transition-colors">
-                  <h3 className="font-semibold text-lg truncate text-gray-900">{name}</h3>
+                <Link to={`/profile/${id}`} className="hover:text-primary transition-colors">
+                  <h3 className="font-medium text-lg truncate">{name}</h3>
                 </Link>
-                <p className="text-gray-600 text-sm mb-1">{title}</p>
+                <p className="text-muted-foreground text-sm mb-1">{title}</p>
               </div>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 className={cn(
-                  "text-gray-500",
-                  saved && "text-gray-900 hover:text-gray-900"
+                  "text-muted-foreground",
+                  saved && "text-primary hover:text-primary"
                 )}
                 onClick={handleSave}
               >
@@ -124,10 +124,10 @@ export function ProfileCard({
               </Button>
             </div>
             
-            <div className="flex items-center text-sm text-gray-600 mb-4">
+            <div className="flex items-center text-sm text-muted-foreground mb-4">
               <div className="flex items-center mr-3">
                 <Star size={16} className="text-amber-500 mr-1" />
-                <span className="font-medium text-gray-900">{rating.toFixed(1)}</span>
+                <span className="font-medium text-foreground">{rating.toFixed(1)}</span>
                 <span className="mx-1">({reviewCount})</span>
               </div>
               <div className="flex items-center">
@@ -138,15 +138,15 @@ export function ProfileCard({
             
             <div className="flex items-center justify-between mb-4">
               <div>
-                <span className="text-xs text-gray-500">Hourly Rate</span>
-                <p className="font-semibold text-gray-900">₹{hourlyRate.toFixed(2)}/hr</p>
+                <span className="text-xs text-muted-foreground">Hourly Rate</span>
+                <p className="font-semibold">${hourlyRate.toFixed(2)}/hr</p>
               </div>
               
               <div className="flex gap-2">
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  className="rounded-full h-9 border-gray-200 text-gray-700 hover:bg-gray-100"
+                  className="rounded-full h-9"
                   onClick={handleContact}
                 >
                   <MessageSquare size={16} className="mr-1" />
@@ -154,7 +154,7 @@ export function ProfileCard({
                 </Button>
                 <Button 
                   size="sm" 
-                  className="rounded-full h-9 bg-gray-900 hover:bg-gray-800 text-white"
+                  className="rounded-full h-9"
                   onClick={handleHire}
                 >
                   Hire
@@ -167,7 +167,7 @@ export function ProfileCard({
                 <Badge 
                   key={index}
                   variant="secondary"
-                  className="cursor-pointer hover:bg-gray-200 bg-gray-100 text-gray-700 border-gray-200 transition-colors"
+                  className="cursor-pointer hover:bg-secondary/80 transition-colors"
                   onClick={() => handleTagClick(tag)}
                 >
                   {tag}
