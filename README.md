@@ -1,4 +1,4 @@
-# 🌐 Web3 Freelance Platform 💼
+# 🌐 Expleadora💼
 
 This project is a modern web3 freelance platform connecting clients and freelancers using blockchain technology. It offers a secure and transparent environment for project collaboration, payments, and dispute resolution. The platform aims to revolutionize the freelance economy by leveraging the benefits of decentralization, smart contracts, and cryptocurrency.
 
@@ -150,4 +150,4 @@ If you have any questions or suggestions, feel free to contact us at [your-email
 
 Thank you for checking out our project! We hope you find it useful and we appreciate any feedback or contributions.
 
-This README is written by [readme.ai](https://readme-generator-phi.vercel.app/).
+
